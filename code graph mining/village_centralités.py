@@ -21,10 +21,17 @@ def build_edges(df):
     return pd.DataFrame({
         "id1": id1,
         "id2": id2,
-        "duration": df["duration"],   # durée du contact en secondes
+        "duration": df["duration"],
         "day": df["day"],
         "hour": df["hour"],
+        "household1": df["h1"].astype(str),
+        "age1": df["age1"],
+        "sex1": df["sex1"],
+        "household2": df["h2"].astype(str),
+        "age2": df["age2"],
+        "sex2": df["sex2"],
     })
+
 
 
 edges_within = build_edges(df_within)
@@ -33,6 +40,17 @@ edges_across = build_edges(df_across)
 # Fusionner toutes les interactions (within + across)
 df_all = pd.concat([edges_within, edges_across], ignore_index=True)
 print("Total lignes (contacts) :", df_all.shape)
+
+# Construire les métadonnées des nœuds (1 ligne par individu)
+meta_1 = df_all[["id1", "household1", "age1", "sex1"]].rename(
+    columns={"id1": "id", "household1": "household", "age1": "age", "sex1": "sex"}
+)
+
+meta_2 = df_all[["id2", "household2", "age2", "sex2"]].rename(
+    columns={"id2": "id", "household2": "household", "age2": "age", "sex2": "sex"}
+)
+
+meta_all = pd.concat([meta_1, meta_2], ignore_index=True).drop_duplicates(subset=["id"])
 
 # -----------------------------
 # 3) Agréger sur les 3 jours par paire (id1, id2)
@@ -69,6 +87,13 @@ print("Graphe village :",
       G_village.number_of_nodes(), "nœuds,",
       G_village.number_of_edges(), "arêtes")
 
+# Ajouter les métadonnées aux nœuds
+for _, r in meta_all.iterrows():
+    if r["id"] in G_village:
+        G_village.nodes[r["id"]]["household"] = r["household"]
+        G_village.nodes[r["id"]]["age"] = int(r["age"])
+        G_village.nodes[r["id"]]["sex"] = r["sex"]
+
 # -----------------------------
 # 5) Calculer les centralités (critère 2)
 # -----------------------------
@@ -91,8 +116,12 @@ pr_village = nx.pagerank(G_village, weight="weight")  # 'weight' = duration
 # -----------------------------
 rows = []
 for node in G_village.nodes():
+    node_data = G_village.nodes[node]
     rows.append({
         "id": node,
+        "household": node_data.get("household"),
+        "age": node_data.get("age"),
+        "sex": node_data.get("sex"),
         "degree": deg_village[node],
         "betweenness": bet_village[node],
         "closeness": clo_village[node],
