@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Charger le graphe
-G_school = nx.read_gexf("data/sp_data_school_day_1_g.gexf")
+G_school = nx.read_gexf("data/school_day1_day2_complet.gexf")
+
 
 # 1. Degré non pondéré
 deg_school = dict(G_school.degree())
@@ -16,7 +17,7 @@ print("Min, max :", deg_vals.min(), deg_vals.max())
 print("Coefficient de variation :", deg_vals.std() / deg_vals.mean())
 
 # 2. Degré pondéré (force)
-strength_school = dict(G_school.degree(weight="duration"))
+strength_school = dict(G_school.degree(weight="weight"))
 strength_vals = np.array(list(strength_school.values()))
 
 print("\n---- Force (durée cumulée) ----")
@@ -29,6 +30,8 @@ plt.figure()
 plt.hist(deg_vals, bins=20)
 plt.xlabel("Degré")
 plt.ylabel("Nombre de nœuds")
-plt.title("Distribution du degré – École (Jour 1)")
+plt.title("Distribution du degré – École (Jours 1 et 2)")
 plt.tight_layout()
-plt.savefig("degree_school_day1.png")  # l'image sera dans ton dossier du script
+plt.savefig("degree_school_day1_day2_complet.png")  # l'image sera dans ton dossier du script
+
+

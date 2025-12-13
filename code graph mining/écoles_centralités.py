@@ -5,14 +5,14 @@ import numpy as np
 # -----------------------------
 # 1) Charger le graphe
 # -----------------------------
-G_school = nx.read_gexf("data/sp_data_school_day_1_g.gexf")
+G_school = nx.read_gexf("data/school_day1_day2_complet.gexf")
 print("Graphe chargé :", G_school.number_of_nodes(), "nœuds,", G_school.number_of_edges(), "arêtes")
 
 # -----------------------------
 # 2) Charger le degré (déjà critère 1)
 # -----------------------------
 deg_school = dict(G_school.degree())
-strength_school = dict(G_school.degree(weight="duration"))
+strength_school = dict(G_school.degree(weight="weight"))
 
 # -----------------------------
 # 3) Betweenness centrality
@@ -30,7 +30,7 @@ clo_school = nx.closeness_centrality(G_school)
 # 5) PageRank (pondéré par durée)
 # -----------------------------
 print("Calcul du PageRank...")
-pr_school = nx.pagerank(G_school, weight="duration")
+pr_school = nx.pagerank(G_school, weight="weight")
 
 # -----------------------------
 # 6) Rassembler dans DataFrame
@@ -41,8 +41,8 @@ rows = []
 for node, data in G_school.nodes(data=True):
     rows.append({
         "id": node,
-        "class": data.get("classname"),
-        "gender": data.get("gender"),
+        "class": data.get("class"),
+        "gender": data.get("sex"),
         "degree": deg_school[node],
         "strength": strength_school[node],
         "betweenness": bet_school[node],
@@ -53,8 +53,8 @@ for node, data in G_school.nodes(data=True):
 df = pd.DataFrame(rows)
 
 # Sauvegarder si besoin
-df.to_csv("centralites_ecole_day1.csv", index=False)
-print("centralites_ecole_day1.csv créé !")
+df.to_csv("centralites_ecole_day1_day2-complet.csv", index=False)
+print("centralites_ecole_day1_day2-complet.csv.csv créé !")
 
 # -----------------------------
 # 7) Afficher les TOP 10
