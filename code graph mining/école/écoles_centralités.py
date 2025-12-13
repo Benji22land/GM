@@ -5,7 +5,7 @@ import numpy as np
 # -----------------------------
 # 1) Charger le graphe
 # -----------------------------
-G_school = nx.read_gexf("data/school_day1_day2_complet.gexf")
+G_school = nx.read_gexf("../data/school_day1_day2_complet.gexf")
 print("Graphe chargé :", G_school.number_of_nodes(), "nœuds,", G_school.number_of_edges(), "arêtes")
 
 # -----------------------------

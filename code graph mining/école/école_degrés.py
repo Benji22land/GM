@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Charger le graphe
-G_school = nx.read_gexf("data/school_day1_day2_complet.gexf")
+G_school = nx.read_gexf("../data/school_day1_day2_complet.gexf")
 
 
 # 1. Degré non pondéré
