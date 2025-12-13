@@ -133,8 +133,7 @@ for node in G_village.nodes():
     })
 
 df_cent_village = pd.DataFrame(rows)
-df_cent_village.to_csv("centralites_village.csv", index=False)
-print("centralites_village.csv créé !")
+
 
 # -----------------------------
 # 7) Afficher les TOP 10

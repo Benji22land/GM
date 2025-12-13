@@ -52,9 +52,7 @@ for node, data in G_school.nodes(data=True):
 
 df = pd.DataFrame(rows)
 
-# Sauvegarder si besoin
-df.to_csv("centralites_ecole_day1_day2-complet.csv", index=False)
-print("centralites_ecole_day1_day2-complet.csv.csv créé !")
+
 
 # -----------------------------
 # 7) Afficher les TOP 10
